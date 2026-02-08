@@ -21,8 +21,7 @@ function CardHeader({ cardInfo, index, removeCard, replaceCard }: {
   }, [editing]);
 
   useEffect(() => {
-    cardInfo.title = title;
-    replaceCard(index, cardInfo);
+    replaceCard(index, { ...cardInfo, title });
   }, [title]);
 
   return (

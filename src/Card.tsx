@@ -18,32 +18,27 @@ function Card({ cardInfo, index, removeCard, replaceCard }: {
   const lastTick = useRef<Date>(null);
 
   useEffect(() => {
+    if (isTicking) {
+      lastTick.current = new Date();
+      interval.current = setInterval(() => {
+        const now = new Date();
+        const delta = now.getTime() - lastTick.current!.getTime();
+
+        lastTick.current = now;
+
+        setCurrentNumberOfMs((ms) => ms + delta);
+      }, 100);
+    } else {
+      // Save the numberOfMs when the ticking stops
+      replaceCard(index, { ...cardInfo, numberOfMs });
+    }
+
     return () => {
       if (interval.current !== null) {
         clearInterval(interval.current);
+        interval.current = null;
       }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isTicking && interval.current !== null) {
-      clearInterval(interval.current);
-
-      cardInfo.numberOfMs = numberOfMs;
-      replaceCard(index, cardInfo);
-      return;
-    }
-
-
-    lastTick.current = new Date();
-    interval.current = setInterval(() => {
-      const now = new Date();
-      const delta = now.getTime() - lastTick.current!.getTime();
-
-      lastTick.current = now;
-
-      setCurrentNumberOfMs((ms) => ms + delta);
-    }, 100);
+    };
   }, [isTicking]);
 
   useEffect(() => {
