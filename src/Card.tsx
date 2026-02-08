@@ -5,13 +5,14 @@ import CardHeader from './CardHeader';
 import { RiResetLeftLine } from 'react-icons/ri';
 import type { CardInfo } from './App';
 
-function Card({ cardInfo, index, removeCard }: {
+function Card({ cardInfo, index, removeCard, replaceCard }: {
   cardInfo: CardInfo,
   index: number,
   removeCard: (index: number) => void,
+  replaceCard: (index: number, newElement: CardInfo) => void
 }) {
   const [isTicking, setIsTicking] = useState(false)
-  const [numberOfMs, setCurrentNumberOfMs] = useState(0);
+  const [numberOfMs, setCurrentNumberOfMs] = useState(cardInfo.numberOfMs ? cardInfo.numberOfMs : 0);
   const [formattedTime, setFormattedTime] = useState("00:00:00.000");
   const interval = useRef<number>(null);
   const lastTick = useRef<Date>(null);
@@ -27,6 +28,9 @@ function Card({ cardInfo, index, removeCard }: {
   useEffect(() => {
     if (!isTicking && interval.current !== null) {
       clearInterval(interval.current);
+
+      cardInfo.numberOfMs = numberOfMs;
+      replaceCard(index, cardInfo);
       return;
     }
 
@@ -50,7 +54,7 @@ function Card({ cardInfo, index, removeCard }: {
     <>
       <div className="card">
 
-        <CardHeader cardInfo={cardInfo} index={index} removeCard={removeCard} />
+        <CardHeader cardInfo={cardInfo} index={index} removeCard={removeCard} replaceCard={replaceCard} />
 
         <div className="stopwatch-container">
           <pre>

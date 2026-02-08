@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import './CardHeader.css'
 import type { CardInfo } from './App';
 
-function CardHeader({ cardInfo, index, removeCard }: {
+function CardHeader({ cardInfo, index, removeCard, replaceCard }: {
   cardInfo: CardInfo,
   index: number,
   removeCard: (index: number) => void,
+  replaceCard: (index: number, newElement: CardInfo) => void
 }) {
   const DEFAULT_TITLE = "Title";
 
@@ -18,6 +19,11 @@ function CardHeader({ cardInfo, index, removeCard }: {
       setTitle(DEFAULT_TITLE);
     }
   }, [editing]);
+
+  useEffect(() => {
+    cardInfo.title = title;
+    replaceCard(index, cardInfo);
+  }, [title]);
 
   return (
     <div className="card-header">
