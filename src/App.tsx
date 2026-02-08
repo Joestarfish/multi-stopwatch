@@ -5,6 +5,7 @@ import CardContainer from './CardContainer'
 import PlaceholderCard from './PlaceholderCard'
 import { useArray } from './hooks/useArray'
 import { useLocalStorage } from './hooks/useLocalStorage'
+import { v4 } from 'uuid'
 
 export type CardInfo = {
   id: string
@@ -15,9 +16,9 @@ export type CardInfo = {
 function App() {
 
   const [savedCards, setSavedCards] = useLocalStorage<CardInfo[]>('cards', [
-    { id: crypto.randomUUID().toString() },
-    { id: crypto.randomUUID().toString() },
-    { id: crypto.randomUUID().toString() },
+    { id: v4() },
+    { id: v4() },
+    { id: v4() },
   ])
 
   const {

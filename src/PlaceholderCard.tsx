@@ -1,11 +1,12 @@
 import './PlaceholderCard.css'
 import './Card.css'
 import type { CardInfo } from './App';
+import { v4 } from 'uuid';
 
 function PlaceholderCard({pushCard}: {pushCard: (element: CardInfo) => void}) {
 
   function addCard() {
-    pushCard({id: crypto.randomUUID() });
+    pushCard({id: v4() });
   }
 
   return (
