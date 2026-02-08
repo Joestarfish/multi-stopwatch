@@ -3,13 +3,26 @@ import { Duration } from 'luxon';
 import './Card.css'
 import CardHeader from './CardHeader';
 import { RiResetLeftLine } from 'react-icons/ri';
+import type { CardInfo } from './App';
 
-function Card() {
+function Card({ cardInfo, index, removeCard }: {
+  cardInfo: CardInfo,
+  index: number,
+  removeCard: (index: number) => void,
+}) {
   const [isTicking, setIsTicking] = useState(false)
   const [numberOfMs, setCurrentNumberOfMs] = useState(0);
   const [formattedTime, setFormattedTime] = useState("00:00:00.000");
   const interval = useRef<number>(null);
   const lastTick = useRef<Date>(null);
+
+  useEffect(() => {
+    return () => {
+      if (interval.current !== null) {
+        clearInterval(interval.current);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (!isTicking && interval.current !== null) {
@@ -37,7 +50,7 @@ function Card() {
     <>
       <div className="card">
 
-        <CardHeader />
+        <CardHeader cardInfo={cardInfo} index={index} removeCard={removeCard} />
 
         <div className="stopwatch-container">
           <pre>

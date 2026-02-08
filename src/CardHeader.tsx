@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
 import './CardHeader.css'
+import type { CardInfo } from './App';
 
-function CardHeader() {
+function CardHeader({ cardInfo, index, removeCard }: {
+  cardInfo: CardInfo,
+  index: number,
+  removeCard: (index: number) => void,
+}) {
   const DEFAULT_TITLE = "Title";
 
-  const [title, setTitle] = useState(DEFAULT_TITLE);
+  const [title, setTitle] = useState(cardInfo.title ? cardInfo.title : DEFAULT_TITLE);
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
@@ -28,7 +33,7 @@ function CardHeader() {
         <h3 onClick={() => setEditing(true)}>{title}</h3>
       )}
 
-      <button className="close-button" onClick={() => console.log("TODO: Add a close feature")}>x</button>
+      <button className="close-button" onClick={() => removeCard(index)}>x</button>
     </div>
   )
 }
