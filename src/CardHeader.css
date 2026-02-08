@@ -6,6 +6,10 @@
   align-items: center;
 }
 
+.card-header input {
+  max-width: 100%;
+}
+
 .close-button {
   padding: 2px 2px;
   background-color: #0000;
