@@ -11,7 +11,7 @@ function PlaceholderCard({pushCard}: {pushCard: (element: CardInfo) => void}) {
   return (
     <div className="card placeholder-card">
       <div className="card-header">
-        <h3>Add a card</h3>
+        <h3>Add a stopwatch</h3>
       </div>
 
       <div className="stopwatch-container">
