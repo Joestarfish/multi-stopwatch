@@ -1,3 +1,15 @@
+# multi-stopwatch ⏱️
+
+A React app that allows tracking time spent on multiple tasks.
+
+The stopwatches are stored in localStorage to allow reloading the page without losing track of the time spent on tasks.
+
+Renaming or stopping a stopwatch saves the new name and the current time respectively.
+
+
+--------
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
