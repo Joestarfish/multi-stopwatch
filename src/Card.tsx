@@ -13,37 +13,51 @@ function Card({ cardInfo, index, removeCard, replaceCard }: {
 }) {
   const [isTicking, setIsTicking] = useState(false)
   const [numberOfMs, setCurrentNumberOfMs] = useState(cardInfo.numberOfMs ? cardInfo.numberOfMs : 0);
-  const [formattedTime, setFormattedTime] = useState("00:00:00.000");
-  const interval = useRef<number>(null);
-  const lastTick = useRef<Date>(null);
+  const nextAnimationFrame = useRef<number>(null);
+  const lastTick = useRef<number>(null);
+
+
+  function pause() {
+    setIsTicking(false);
+    replaceCard(index, { ...cardInfo, numberOfMs });
+  }
+
+  function start() {
+    setIsTicking(true);
+  }
+
+  function reset() {
+    setIsTicking(false);
+    setCurrentNumberOfMs(0);
+    replaceCard(index, { ...cardInfo, numberOfMs: 0 });
+  }
+
 
   useEffect(() => {
-    if (isTicking) {
-      lastTick.current = new Date();
-      interval.current = setInterval(() => {
-        const now = new Date();
-        const delta = now.getTime() - lastTick.current!.getTime();
-
-        lastTick.current = now;
-
-        setCurrentNumberOfMs((ms) => ms + delta);
-      }, 100);
-    } else {
-      // Save the numberOfMs when the ticking stops
-      replaceCard(index, { ...cardInfo, numberOfMs });
+    if (!isTicking) {
+      return;
     }
 
-    return () => {
-      if (interval.current !== null) {
-        clearInterval(interval.current);
-        interval.current = null;
+    function doTick(timestamp: number) {
+      if (!isTicking) {
+        return;
       }
-    };
+
+      if (lastTick.current) {
+        const delta = timestamp - (lastTick.current ?? 0);
+        setCurrentNumberOfMs((ms) => ms + delta);
+      }
+
+      lastTick.current = timestamp;
+      nextAnimationFrame.current = requestAnimationFrame(doTick);
+    }
+
+    nextAnimationFrame.current = requestAnimationFrame(doTick);
+
+    return () => cancelAnimationFrame(nextAnimationFrame.current!);
   }, [isTicking]);
 
-  useEffect(() => {
-    setFormattedTime(Duration.fromMillis(numberOfMs).toFormat("hh:mm:ss.SSS"));
-  }, [numberOfMs]);
+  const formattedTime = Duration.fromMillis(numberOfMs).toFormat("hh:mm:ss.SSS");
 
   return (
     <>
@@ -59,13 +73,13 @@ function Card({ cardInfo, index, removeCard, replaceCard }: {
           <div className="buttons-container">
             <button
               className="pause"
-              onClick={() => setIsTicking(!isTicking)}>
+              onClick={isTicking ? pause : start}>
               {isTicking ? 'Pause' : 'Start'}
             </button>
 
             <button
               className="reset"
-              onClick={() => { setIsTicking(false); setCurrentNumberOfMs(0); }}>
+              onClick={reset}>
               <RiResetLeftLine />
             </button>
           </div>
