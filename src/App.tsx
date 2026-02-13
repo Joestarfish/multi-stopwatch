@@ -30,7 +30,7 @@ function App() {
 
   useEffect(() => {
     setSavedCards(cards);
-  }, [cards]);
+  }, [cards, setSavedCards]);
 
   return (
     <CardContainer>

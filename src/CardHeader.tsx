@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './CardHeader.css'
 import type { CardInfo } from './App';
 
@@ -13,16 +13,12 @@ function CardHeader({ cardInfo, index, removeCard, replaceCard }: {
   const [title, setTitle] = useState(cardInfo.title ? cardInfo.title : DEFAULT_TITLE);
   const [editing, setEditing] = useState(false);
 
-  useEffect(() => {
-    // If the field was emptied we do not want to let it disappear
-    if (!editing && !title.trim()) {
-      setTitle(DEFAULT_TITLE);
-    }
-  }, [editing]);
-
-  useEffect(() => {
-    replaceCard(index, { ...cardInfo, title });
-  }, [title]);
+  function validateAndSaveTitle() {
+    const newTitle = title.trim() || DEFAULT_TITLE;
+    setTitle(newTitle);
+    replaceCard(index, { ...cardInfo, title: newTitle });
+    setEditing(false);
+  }
 
   return (
     <div className="card-header">
@@ -31,8 +27,8 @@ function CardHeader({ cardInfo, index, removeCard, replaceCard }: {
           autoFocus
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          onBlur={() => setEditing(false)}
-          onKeyDown={(e) => e.key === "Enter" && setEditing(false)}
+          onBlur={validateAndSaveTitle}
+          onKeyDown={(e) => e.key === "Enter" && validateAndSaveTitle()}
         />
       ) : (
         <h3 onClick={() => setEditing(true)}>{title}</h3>
