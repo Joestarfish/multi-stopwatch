@@ -35,6 +35,7 @@ function Card({ cardInfo, index, removeCard, replaceCard }: {
 
   useEffect(() => {
     if (!isTicking) {
+      lastTick.current = null;
       return;
     }
 
